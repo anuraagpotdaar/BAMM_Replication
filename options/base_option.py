@@ -45,7 +45,7 @@ class BaseOptions():
 
         self.opt.is_train = self.is_train
 
-        if self.opt.gpu_id != -1:
+        if self.opt.gpu_id != -1 and torch.cuda.is_available():
             # self.opt.gpu_id = int(self.opt.gpu_id)
             torch.cuda.set_device(self.opt.gpu_id)
 

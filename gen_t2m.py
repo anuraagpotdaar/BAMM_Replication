@@ -106,7 +106,15 @@ if __name__ == '__main__':
     opt = parser.parse(is_eval=True)
     fixseed(opt.seed)
 
-    opt.device = torch.device("cpu" if opt.gpu_id == -1 else "cuda:" + str(opt.gpu_id))
+    if opt.gpu_id == -1:
+        opt.device = torch.device("cpu")
+    elif torch.cuda.is_available():
+        opt.device = torch.device("cuda:" + str(opt.gpu_id))
+    elif torch.backends.mps.is_available():
+        opt.device = torch.device("mps")
+    else:
+        opt.device = torch.device("cpu")
+    print(f"[device] using {opt.device}")
     torch.autograd.set_detect_anomaly(True)
 
     dim_pose = 251 if opt.dataset_name == 'kit' else 263

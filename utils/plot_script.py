@@ -8,6 +8,13 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import mpl_toolkits.mplot3d.axes3d as p3
 
 
+def _clear_ax_artists(ax):
+    for ln in list(ax.lines):
+        ln.remove()
+    for col in list(ax.collections):
+        col.remove()
+
+
 COLORS = [[255, 0, 0], [255, 85, 0], [255, 170, 0], [255, 255, 0], [170, 255, 0], [85, 255, 0], [0, 255, 0],
           [0, 255, 85], [0, 255, 170], [0, 255, 255], [0, 170, 255], [0, 85, 255], [0, 0, 255], [85, 0, 255],
           [170, 0, 255], [255, 0, 255], [255, 0, 170], [255, 0, 85]]
@@ -123,8 +130,7 @@ def plot_3d_motion_v2(motion, kinematic_tree, save_path, interval=50, dataset=No
     print(data.shape)
 
     def update(index):
-        ax.lines = []
-        ax.collections = []
+        _clear_ax_artists(ax)
         ax.view_init(elev=110, azim=-90)
         ax.scatter(motion[index, :, 0], motion[index, :, 1], motion[index, :, 2], color='black')
         for chain, color in zip(kinematic_tree, colors):
@@ -192,8 +198,7 @@ def plot_3d_motion_kit(save_path, kinematic_tree, joints, title, figsize=(5, 5),
 
     def update(index):
         #         print(index)
-        ax.lines = []
-        ax.collections = []
+        _clear_ax_artists(ax)
         ax.view_init(elev=110, azim=-90)
         ax.dist = 7.5
         #         ax =
@@ -250,8 +255,7 @@ def plot_3d_motion_gt_pred(save_path, kinematic_tree, gt_joints, pred_joints, ti
 
     def update(index):
         for i, ax in enumerate(axs):
-            ax.lines = []
-            ax.collections = []
+            _clear_ax_artists(ax)
             ax.view_init(elev=120, azim=-90)
             ax.dist = 7.5
 
@@ -375,8 +379,7 @@ def plot_3d_motion(save_path, kinematic_tree, joints, title, figsize=(10, 10), f
 
     def update(index):
         #         print(index)
-        ax.lines = []
-        ax.collections = []
+        _clear_ax_artists(ax)
         ax.view_init(elev=120, azim=-90)
         ax.dist = 7.5
         #         ax =
@@ -438,8 +441,7 @@ def plot_3d_motion_old(motion, pose_tree, class_type, save_path, interval=300, e
     print(data.shape)
 
     def update(index):
-        ax.lines = []
-        ax.collections = []
+        _clear_ax_artists(ax)
         if excluded_joints is None:
             ax.scatter(data[index, :, 0], data[index, :, 1], data[index, :, 2], color='b', marker='h', s=15)
         else:
@@ -517,8 +519,7 @@ def plot_3d_multi_motion(motion_list, kinematic_tree, save_path, interval=50, da
     # print(data.shape)
     print("Number of motions %d" % (len(motion_list)))
     def update(index):
-        ax.lines = []
-        ax.collections = []
+        _clear_ax_artists(ax)
         if dataset == "mocap":
             ax.view_init(elev=110, azim=-90)
         else:

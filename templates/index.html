@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAMM — Bidirectional Autoregressive Motion Model</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div id="canvas-container">
+        <canvas id="renderCanvas"></canvas>
+    </div>
+
+    <div class="controls">
+        <div class="status-group">
+            <div class="status-item"><span class="status-label">Status:</span><span id="status" class="status-value">Idle</span></div>
+            <div class="status-item"><span class="status-label">Buffer:</span><span id="bufferSize" class="status-value">0 / 4</span></div>
+            <div class="status-item"><span class="status-label">FPS:</span><span id="fps" class="status-value">0</span></div>
+            <div class="status-item"><span class="status-label">Frames:</span><span id="frameCount" class="status-value">0</span></div>
+            <div class="status-item" style="display:none;"><span class="status-label">Smoothing α:</span><span id="currentSmoothing" class="status-value">0.50</span></div>
+            <div class="status-item" style="display:none;"><span class="status-label">History:</span><span id="currentHistory" class="status-value">-</span></div>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="motionText" placeholder="Type a motion or click a preset" value="walk forward">
+        </div>
+
+        <div id="motionPresets" class="motion-presets">
+            <button class="motion-chip" data-motion="walk forward">Walk</button>
+            <button class="motion-chip" data-motion="run forward">Run</button>
+            <button class="motion-chip" data-motion="jump">Jump</button>
+            <button class="motion-chip" data-motion="dance">Dance</button>
+            <button class="motion-chip" data-motion="sit down">Sit</button>
+            <button class="motion-chip" data-motion="stand up">Stand</button>
+            <button class="motion-chip" data-motion="wave hand">Wave</button>
+            <button class="motion-chip" data-motion="kick">Kick</button>
+            <button class="motion-chip" data-motion="punch">Punch</button>
+            <button class="motion-chip" data-motion="crouch">Crouch</button>
+            <button class="motion-chip" data-motion="turn around">Turn</button>
+            <button class="motion-chip" data-motion="clap hands">Clap</button>
+            <button class="motion-chip" data-motion="bow">Bow</button>
+            <button class="motion-chip" data-motion="walk in a circle">Circle</button>
+        </div>
+
+        <div class="button-group">
+            <button id="startResetBtn" class="btn btn-primary">Start</button>
+            <button id="updateBtn" class="btn btn-secondary" style="display: none;" disabled>Update Text</button>
+            <button id="pauseResumeBtn" class="btn btn-warning" disabled>Pause</button>
+            <button id="configBtn" class="btn">Config</button>
+        </div>
+
+        <div class="char-row">
+            <span class="char-label">Character:</span>
+            <span class="char-current" id="characterCurrent">Skeleton</span>
+            <button id="characterToggleBtn" class="char-btn">Switch to Soldier</button>
+        </div>
+
+        <div id="conflictWarning" class="conflict-warning" style="display: none;">
+            <p><strong>⚠️ Another user is generating</strong></p>
+            <button id="forceTakeoverBtn" class="btn btn-danger">Force Takeover</button>
+            <button id="cancelTakeoverBtn" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+    
+    <!-- Config Modal -->
+    <div id="configModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Config Editor</h2>
+            </div>
+            <div class="modal-body">
+                <div class="config-section">
+                    <h3>Schedule Config</h3>
+                    <div id="scheduleConfigFields"></div>
+                </div>
+                <div class="config-section">
+                    <h3>CFG Config</h3>
+                    <div id="cfgConfigFields"></div>
+                </div>
+                <div class="config-section">
+                    <h3>Runtime Parameters</h3>
+                    <div class="config-field">
+                        <label for="modalHistoryLength">History Length</label>
+                        <input type="number" id="modalHistoryLength" value="">
+                    </div>
+                    <div class="config-field">
+                        <label for="modalSmoothingAlpha">Smoothing α</label>
+                        <div class="slider-container">
+                            <input type="range" id="modalSmoothingAlpha" min="0" max="1" step="0.05" value="0.5">
+                            <span id="modalSmoothingValue" class="slider-value">0.50</span>
+                        </div>
+                        <span class="param-hint">0.0 = max smoothing, 1.0 = no smoothing</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="configDiscardBtn">Discard</button>
+                <button class="btn btn-primary" id="configSaveBtn">Update &amp; Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="/static/js/skeleton.js"></script>
+    <script src="/static/js/mesh_body.js"></script>
+    <script src="/static/js/smpl_body.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
+

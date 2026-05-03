@@ -1,7 +1,14 @@
 import operator
 
 import numpy as np
-import numpy.core.umath_tests as ut
+try:
+    import numpy.core.umath_tests as ut  # numpy < 2
+except ModuleNotFoundError:
+    class _UT:
+        @staticmethod
+        def matrix_multiply(a, b):
+            return np.matmul(a, b)
+    ut = _UT()
 
 from visualization.Quaternions import Quaternions
 
